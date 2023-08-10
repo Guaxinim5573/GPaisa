@@ -23,10 +23,10 @@ extension ExpenseModelBoxMapping on Box<TransactionModel> {
       .toList();
 
   Iterable<TransactionModel> get expenseList =>
-      values.where((element) => element.type == TransactionType.expense);
+      values.where((element) => element.type == TransactionType.expense && !element.name!.startsWith('Transfer from '));
 
   Iterable<TransactionModel> get incomeList =>
-      values.where((element) => element.type == TransactionType.income);
+      values.where((element) => element.type == TransactionType.income && !element.name!.startsWith('Received from '));
 
   double get totalExpense => expenseList.map((e) => e.currency).fold<double>(
       0, (previousValue, element) => previousValue + (element ?? 0));
