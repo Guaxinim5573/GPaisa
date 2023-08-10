@@ -23,10 +23,10 @@ extension ExpenseModelBoxMapping on Box<TransactionModel> {
       .toList();
 
   Iterable<TransactionModel> get expenseList =>
-      values.where((element) => element.type == TransactionType.expense && !element.name!.startsWith('Transfer from '));
+      values.where((element) => element.type == TransactionType.expense && !element.name!.toLowerCase().startsWith('transfer from '));
 
   Iterable<TransactionModel> get incomeList =>
-      values.where((element) => element.type == TransactionType.income && !element.name!.startsWith('Received from '));
+      values.where((element) => element.type == TransactionType.income && !element.name!.startsWith('received from '));
 
   double get totalExpense => expenseList.map((e) => e.currency).fold<double>(
       0, (previousValue, element) => previousValue + (element ?? 0));
@@ -84,10 +84,10 @@ extension ExpensesHelper on Iterable<TransactionEntity> {
   List<TransactionEntity> get expenses => sortByTime();
 
   List<TransactionEntity> get expenseList =>
-      where((element) => element.type == TransactionType.expense).toList();
+      where((element) => element.type == TransactionType.expense && !element.name!.toLowerCase().startsWith('transfer from ')).toList();
 
   List<TransactionEntity> get incomeList =>
-      where((element) => element.type == TransactionType.income).toList();
+      where((element) => element.type == TransactionType.income && !element.name!.toLowerCase().startsWith('received from ')).toList();
 
   List<TransactionEntity> isFilterTimeBetween(DateTimeRange range) =>
       where((element) => element.time!.isAfterBeforeTime(range)).toList();
@@ -113,7 +113,7 @@ extension ExpensesHelper on Iterable<TransactionEntity> {
       0, (previousValue, element) => previousValue + (element ?? 0));
 
   double get thisMonthExpense =>
-      where((element) => element.type == TransactionType.expense)
+      where((element) => element.type == TransactionType.expense && !element.name!.toLowerCase().startsWith('transfer from '))
           .where((element) =>
               element.time?.month == DateTime.now().month &&
               element.time?.year == DateTime.now().year)
@@ -122,7 +122,7 @@ extension ExpensesHelper on Iterable<TransactionEntity> {
               0, (previousValue, element) => previousValue + (element ?? 0));
 
   List<TransactionEntity> get thisMonthExpensesList =>
-      where((element) => element.type == TransactionType.expense)
+      where((element) => element.type == TransactionType.expense && !element.name!.toLowerCase().startsWith('transfer from '))
           .where((element) =>
               element.time?.month == DateTime.now().month &&
               element.time?.year == DateTime.now().year)
@@ -132,7 +132,7 @@ extension ExpensesHelper on Iterable<TransactionEntity> {
       thisMonthExpensesList.map((element) => (element.currency ?? 0)).toList();
 
   List<TransactionEntity> get thisMonthIncomeList =>
-      where((element) => element.type == TransactionType.income)
+      where((element) => element.type == TransactionType.income && !element.name!.toLowerCase().startsWith('received from '))
           .where((element) =>
               element.time?.month == DateTime.now().month &&
               element.time?.year == DateTime.now().year)
@@ -142,7 +142,7 @@ extension ExpensesHelper on Iterable<TransactionEntity> {
       thisMonthIncomeList.map((element) => (element.currency ?? 0)).toList();
 
   double get thisMonthIncome =>
-      where((element) => element.type == TransactionType.income)
+      where((element) => element.type == TransactionType.income && !element.name!.toLowerCase().startsWith('received from '))
           .where((element) =>
               element.time?.month == DateTime.now().month &&
               element.time?.year == DateTime.now().year)
